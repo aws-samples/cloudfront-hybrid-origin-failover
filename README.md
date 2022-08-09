@@ -16,7 +16,7 @@ The solution will achieve the following:
 
 ## Architecture
 
-![image](https://user-images.githubusercontent.com/46141598/179996740-af1d97c7-52af-48cd-9bea-bcd155d5a3c2.png)
+![image](/architecture.png "Architecture")
 
 ## Solution Requirements
 * Required privileges to create AWS resources in two different regions
@@ -28,8 +28,8 @@ The solution will achieve the following:
 
 Deploy this stack to your Primary and Fallback Region:
 ```
-git clone https://github.com/csahraoui/cloudfront-combined-failover.git
-cd cloudfront-combined-failover
+git clone https://gitlab.aws.dev/chakibsa/cloudfront-hybrid-origin-failover.git
+cd cloudfront-hybrid-origin-failover
 ./deployment/deploy.sh AWS_REGION AWS_BACKUP_REGION DOMAIN_NAME HOSTED_ZONE_ID
 ```
 
