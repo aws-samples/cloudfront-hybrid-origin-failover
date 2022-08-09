@@ -5,7 +5,6 @@ import { EndpointType } from 'aws-cdk-lib/aws-apigateway';
 
 var AppName = 'myapp';
 var Failover = 'PRIMARY';
-var statusCode = '200';
 
 export class CdkRegionStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps & {hostedZoneId: string, domainName: string})  {
@@ -26,6 +25,7 @@ export class CdkRegionStack extends Stack {
       AppName = this.node.tryGetContext('application-name') || AppName;
       Failover = this.node.tryGetContext('failover') || Failover;
       const AppFQDN = `${AppName}.${domainName}`;
+      const statusCode = '200';
       const myHostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'hosted-zone', {
         zoneName: domainName,
         hostedZoneId,
