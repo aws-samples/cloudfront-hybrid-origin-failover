@@ -77,11 +77,13 @@ Destroy example
 
 ## File Structure
 <pre>
+<pre>
 |-deployment/    [folder containing build scripts]
 |-source/
   |-lib/         [library files including the main typescript stack]
   |-bin/         [main cdk application typescript]
   |-lambda/      [nodejs lambda script that generates HTTP content]
+|-testing/       [folder containing testing scripts]
 </pre>
 
 ## License
