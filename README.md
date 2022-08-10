@@ -77,7 +77,6 @@ Destroy example
 
 ## File Structure
 <pre>
-<pre>
 |-deployment/    [folder containing build scripts]
 |-source/
   |-lib/         [library files including the main typescript stack]
