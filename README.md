@@ -16,7 +16,7 @@ The solution will achieve the following:
 
 ## Architecture
 
-![image](/architecture.png "Architecture")
+![image](/source/images/architecture.png "Architecture")
 
 ## Solution Requirements
 * Required privileges to create AWS resources in two different regions

@@ -3,7 +3,7 @@
 *.d.ts
 node_modules
 #include lambda directory
-!lambda/app_content.js
+!source/lambda/app_content.js
 
 # CDK asset staging directory
 .cdk.staging

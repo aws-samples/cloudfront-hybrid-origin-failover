@@ -40,7 +40,7 @@ export class CdkRegionStack extends Stack {
             StatusCodeVar: statusCode,
         },
         runtime: lambda.Runtime.NODEJS_14_X,   
-        code: lambda.Code.fromAsset('lambda'),  
+        code: lambda.Code.fromAsset('source/lambda'),  
         handler: 'app_content.handler'             
   
       });
