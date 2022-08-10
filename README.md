@@ -75,3 +75,15 @@ Destroy example
 ./deployment/destroy.sh eu-west-1 us-east-1 mydomain.com Z0XXXXXXXXXXXX
 ```
 
+## File Structure
+<pre>
+|-deployment/    [folder containing build scripts]
+|-source/
+  |-lib/         [library files including the main typescript stack]
+  |-bin/         [main cdk application typescript]
+  |-lambda/      [nodejs lambda script that generates HTTP content]
+</pre>
+
+## License
+This library is licensed under the MIT-0 License. See the LICENSE file.
+
