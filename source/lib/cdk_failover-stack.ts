@@ -3,8 +3,8 @@ import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
 import { EndpointType } from 'aws-cdk-lib/aws-apigateway';
 
-var AppName = 'myapp';
-var Failover = 'PRIMARY';
+var originName = 'origin';
+var failoverRole = 'PRIMARY';
 
 export class CdkRegionStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps & {hostedZoneId: string, domainName: string})  {
@@ -22,9 +22,9 @@ export class CdkRegionStack extends Stack {
       }
 
       const {hostedZoneId, domainName} = props;
-      AppName = this.node.tryGetContext('application-name') || AppName;
-      Failover = this.node.tryGetContext('failover') || Failover;
-      const AppFQDN = `${AppName}.${domainName}`;
+      originName = this.node.tryGetContext('application-name') || originName;
+      failoverRole = this.node.tryGetContext('failover') || failoverRole;
+      const originFQDN = `${originName}.${domainName}`;
       const statusCode = '200';
       const myHostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'hosted-zone', {
         zoneName: domainName,
@@ -33,11 +33,11 @@ export class CdkRegionStack extends Stack {
 
 
       // Create Lambda to be used by the API endpoint
-      const AppContent = new lambda.Function(this, `${Failover}-AppContentHandler`, {
+      const AppContent = new lambda.Function(this, `${failoverRole}-appContentHandler`, {
         environment: {
             region: cdk.Stack.of(this).region,
-            FailoverVariable: Failover,
-            StatusCodeVar: statusCode,
+            failoverVariable: failoverRole,
+            statusCodeVariable: statusCode,
         },
         runtime: lambda.Runtime.NODEJS_14_X,   
         code: lambda.Code.fromAsset('source/lambda'),  
@@ -45,91 +45,89 @@ export class CdkRegionStack extends Stack {
   
       });
       // Create a certificate for the custom domain that will be used by API Gateway (API Endpoint)
-      const AppCertificate = new acm.Certificate(this, `${Failover}-Certificate`, {
-        domainName: AppFQDN,
+      const AppCertificate = new acm.Certificate(this, `${failoverRole}-Certificate`, {
+        domainName: originFQDN,
         validation: acm.CertificateValidation.fromDns(myHostedZone),
       });
 
       // Create an API Endpoint on API Gateway
-      const AppEndpoint = new apigateway.LambdaRestApi(this, `${Failover}-AppEndpoint`, {
+      const appEndpoint = new apigateway.LambdaRestApi(this, `${failoverRole}-appEndpoint`, {
         handler: AppContent,
         domainName: {
           certificate: AppCertificate,
-          domainName: AppFQDN,
+          domainName: originFQDN,
         },
         endpointConfiguration: {
           types: [ apigateway.EndpointType.REGIONAL ]
         }
       });
-      const EndpointFQDN = `${AppEndpoint.restApiId}.execute-api.${this.region}.amazonaws.com`;
+      const EndpointFQDN = `${appEndpoint.restApiId}.execute-api.${this.region}.amazonaws.com`;
       
       // Create an Amazon Route53 HealthCheck to monitori the API endpoint
-      const HealthCheck = new route53.CfnHealthCheck(this, `${Failover}-HealthCheck`, {
+      const HealthCheck = new route53.CfnHealthCheck(this, `${failoverRole}-HealthCheck`, {
         healthCheckConfig: {
           type: 'HTTPS',
           failureThreshold: 3,
           fullyQualifiedDomainName: EndpointFQDN,
           port: 443,
           requestInterval: 10,
-          resourcePath: `/${AppEndpoint.deploymentStage.stageName}/health`,
+          resourcePath: `/${appEndpoint.deploymentStage.stageName}/health`,
         },
       });
 
       // Create R53 Failover recordset
-      const AppRecord = new route53.ARecord(this, `AppRecord`, {
+      const appRecord = new route53.ARecord(this, `appRecord`, {
         zone: myHostedZone,
-        target: route53.RecordTarget.fromAlias(new targets.ApiGateway(AppEndpoint)),
-        recordName: AppName,
+        target: route53.RecordTarget.fromAlias(new targets.ApiGateway(appEndpoint)),
+        recordName: originName,
       });
-      const AppRecordSet = AppRecord.node.defaultChild as route53.CfnRecordSet;
-      AppRecordSet.healthCheckId = HealthCheck.attrHealthCheckId;
-      AppRecordSet.setIdentifier = `${Failover}-AppRecord`;
-      AppRecordSet.failover = Failover;
+      const appRecordSet = appRecord.node.defaultChild as route53.CfnRecordSet;
+      appRecordSet.healthCheckId = HealthCheck.attrHealthCheckId;
+      appRecordSet.setIdentifier = `${failoverRole}-appRecord`;
+      appRecordSet.failover = failoverRole;
 
       // Create a condition to allow only cloudfront to be created during Secondary Region deployment
       const createDistribCondition = new cdk.CfnCondition(
         this,
         'createDistribCondition',
         {
-          expression: cdk.Fn.conditionEquals(Failover, 'SECONDARY')
+          expression: cdk.Fn.conditionEquals(failoverRole, 'SECONDARY')
         }
       )
 
       // Create Cloudfront Distributions
       /* Setup 1: Cloudfront with Route 53 failover DNS record, as an Origin */
-      const R53FailoverDistrib = new cloudfront.Distribution(this, 'CF-R53-failover', {
+      const R53failoverDistrib = new cloudfront.Distribution(this, 'CF-R53-failover', {
         defaultBehavior: {
-          origin: new origins.HttpOrigin(AppFQDN),
+          origin: new origins.HttpOrigin(originFQDN),
           cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
         },
       });
-      (R53FailoverDistrib.node.defaultChild as cloudfront.CfnDistribution).cfnOptions.condition = createDistribCondition;
+      (R53failoverDistrib.node.defaultChild as cloudfront.CfnDistribution).cfnOptions.condition = createDistribCondition;
 
       /* Setup 2: Cloudfront with Origin Failover combination with Route53 failover */
-      const CombinedDistrib = new cloudfront.Distribution(this, 'CF-combined-failover', {
+      const HybridFailoverDistrib = new cloudfront.Distribution(this, 'CF-hybrid-failover', {
         defaultBehavior: {
           origin: new origins.OriginGroup({
-            primaryOrigin: new origins.HttpOrigin(AppFQDN),
+            primaryOrigin: new origins.HttpOrigin(originFQDN),
             fallbackOrigin: new origins.HttpOrigin(EndpointFQDN),
-            // optional, defaults to: 500, 502, 503 and 504
-            fallbackStatusCodes: [502],
           }),
           cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
         },
       });
-      (CombinedDistrib.node.defaultChild as cloudfront.CfnDistribution).cfnOptions.condition = createDistribCondition
+      (HybridFailoverDistrib.node.defaultChild as cloudfront.CfnDistribution).cfnOptions.condition = createDistribCondition
 
       // Export Cloudfront Distributions domain names
-      if (Failover === 'SECONDARY') {
+      if (failoverRole === 'SECONDARY') {
         new cdk.CfnOutput(this, 'R53-Failover-Distrib-Domain', {
-          value: `https://${R53FailoverDistrib.distributionDomainName}/prod`,
+          value: `https://${R53failoverDistrib.distributionDomainName}/prod`,
           description: 'Cloudfront Distribution configured with R53 failover origin',
           exportName: 'R53-Failover-Distrib-Domain',
         });
-        new cdk.CfnOutput(this, 'Combined-Failover-Distrib-Domain', {
-            value: `https://${CombinedDistrib.distributionDomainName}/prod`,
-            description: 'Cloudfront Distribution configured with Combined failover origin group',
-            exportName: 'Combined-Failover-Distrib-Domain',
+        new cdk.CfnOutput(this, 'Hybrid-Failover-Distrib-Domain', {
+            value: `https://${HybridFailoverDistrib.distributionDomainName}/prod`,
+            description: 'Cloudfront Distribution configured with Hybrid failover origin group',
+            exportName: 'Hybrid-Failover-Distrib-Domain',
           });
        }
 
