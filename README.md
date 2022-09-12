@@ -1,5 +1,10 @@
 # Blog - Improve web application's availability with hybrid failover using CloudFront and Route 53 🚀
 
+## Introduction
+
+Earlier this year, we released technical guidance regarding [Three advanced design patterns for highly available applications using Amazon CloudFront](https://aws.amazon.com/fr/blogs/networking-and-content-delivery/three-advanced-design-patterns-for-high-available-applications-using-amazon-cloudfront/) including hybrid origin failover, graceful failure, and static stability. In this post, we will dive deeper into hybrid origin failover and how to combine both of them in a hybrid approach to further enhance the availability of your web applications. We will also provide a CDK solution that you can use to test both the Route 53 and combined hybrid origin failover approaches described. 
+
+
 ## Solution's objectives
 
 The objective of this code, is to allow you to quickly test the benefits of using a hybrid failover solution using Cloudfront Origin Failover and Route53.
@@ -19,8 +24,10 @@ The solution will achieve the following:
 ![image](/source/images/architecture.png "Architecture")
 
 ## Solution Requirements
-* Required privileges to create AWS resources in two different regions
+* An AWS Account
 * Public domain hosted on Amazon Route53
+* Permissions to create origin records and health checks in Route 53 
+* Permissions to create or update CloudFront distributions, API Gateway configurations and Lambda functions in two different regions
 * Node.JS installed (as AWS CDK uses Node.js). Visit https://nodejs.org/ to install.
 * AWS CDK Toolkit installed `npm install -g aws-cdk`
 
