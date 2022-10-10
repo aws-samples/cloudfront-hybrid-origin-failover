@@ -37,6 +37,7 @@ Deploy this stack to your Primary and Fallback Region:
 ```
 git clone https://gitlab.aws.dev/chakibsa/cloudfront-hybrid-origin-failover.git
 cd cloudfront-hybrid-origin-failover
+npm install
 ./deployment/deploy.sh AWS_REGION AWS_BACKUP_REGION DOMAIN_NAME HOSTED_ZONE_ID
 ```
 

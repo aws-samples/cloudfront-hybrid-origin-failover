@@ -6,7 +6,7 @@ import { EndpointType } from 'aws-cdk-lib/aws-apigateway';
 var originName = 'origin';
 var failoverRole = 'PRIMARY';
 
-export class CdkRegionStack extends Stack {
+export class CdkCloudFrontFailover extends Stack {
     constructor(scope: Construct, id: string, props: StackProps & {hostedZoneId: string, domainName: string})  {
       super(scope, id, props);
      

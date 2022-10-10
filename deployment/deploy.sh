@@ -4,10 +4,14 @@ if [[ $# -ge 4 ]]; then
     export DOMAIN_NAME=$3
     export HOSTED_ZONE_ID=$4
     npx cdk bootstrap
-    npx cdk deploy -c failover=SECONDARY --require-approval never
+    npx cdk deploy -c failover=SECONDARY --require-approval never --outputs-file ./cdk-outputs-secondary.json
+    if ! grep -q cloudfront ./cdk-outputs-secondary.json; then
+        echo "Secondary region deployment failed. Deployment stopped!"
+        exit
+    fi
     export AWS_REGION=$1
     npx cdk bootstrap
-    npx cdk deploy --require-approval never
+    npx cdk deploy --require-approval never --outputs-file ./cdk-outputs-primary.json
     exit $?
 else
     echo 1>&2 "###############################################################################"

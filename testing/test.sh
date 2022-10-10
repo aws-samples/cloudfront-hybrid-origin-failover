@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 if [[ $# -ge 1 ]]; then
 
-    for ((i=1;i<=100;i++));
+    for ((i=1;i<=300;i++));
     do
     status_code=`curl --silent --connect-timeout 8 --output /dev/null $1 -I -w "%{http_code}\n"`
     if [[ "$status_code" -ge 500 ]] ; then
