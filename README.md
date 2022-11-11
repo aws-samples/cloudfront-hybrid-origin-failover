@@ -57,11 +57,11 @@ At the end of the deployment, you can find an export of the FQDN of 2 Cloudfront
 * Setup 1: Cloudfront Distribution with Route53 failover DNS record as origin
 * * Export Name = R53FailoverDistribDomain
 * Setup 2: Cloudfront Distribution with Combined Route53 Failover with Cloudfront Origin Failover 
-* * Export Name = CombinedFailoverDistribDomain
+* * Export Name = HybridFailoverDistribDomain
 
 ```
 Outputs:
-CdkRegionStack.CombinedFailoverDistribDomain = https://XXXXXXX.cloudfront.net/prod
+CdkRegionStack.HybridFailoverDistribDomain = https://XXXXXXX.cloudfront.net/prod
 CdkRegionStack.R53FailoverDistribDomain = https://YYYYYYYY.cloudfront.net/prod
 ```
 

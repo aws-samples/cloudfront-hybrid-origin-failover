@@ -14,7 +14,7 @@ if [[ $# -ge 1 ]]; then
     exit $?
 else
     echo 1>&2 "###############################################################################"
-    echo 1>&2 "Please provide exported Cloudfront Distribution URL."
+    echo 1>&2 "Please provide exported CloudFront Distribution URL."
     echo 1>&2 "* Example:   test.sh https://xxxxxxxx.cloudfront.net/prod"
     echo 1>&2 "###############################################################################"
     exit 1
