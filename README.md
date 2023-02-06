@@ -50,7 +50,7 @@ Required Arguments:
 
 Deployment example
 ```
-./deployment/deploy.sh eu-west-1 us-east-1 mydomain.com Z0XXXXXXXXXXXX
+./deployment/deploy.sh eu-west-1 us-east-1 example.com Z0XXXXXXXXXXXX
 ```
 
 At the end of the deployment, you can find an export of the FQDN of 2 Cloudfront distributions:
@@ -80,7 +80,7 @@ To destroy the stack from your Primary and Fallback Region:
 
 Destroy example
 ```
-./deployment/destroy.sh eu-west-1 us-east-1 mydomain.com Z0XXXXXXXXXXXX
+./deployment/destroy.sh eu-west-1 us-east-1 example.com Z0XXXXXXXXXXXX
 ```
 
 ## File Structure
