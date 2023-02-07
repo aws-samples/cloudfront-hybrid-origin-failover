@@ -1,4 +1,4 @@
-# Blog - Improve web application's availability with hybrid failover using CloudFront and Route 53 🚀
+# Blog - Improve your web application's availability with CloudFront and Route53 hybrid origin failover 🚀
 
 ## Introduction
 
