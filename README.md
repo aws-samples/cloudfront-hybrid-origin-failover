@@ -74,18 +74,22 @@ CdkRegionStack.R53FailoverDistribDomain = https://YYYYYYYY.cloudfront.net/prod
 ```
 
 ## Testing
-In order to test both failover solutions, you could use the following bash script. You will need to provide the previously exported Cloudfront Distribution URL 
+To test both failover solutions, you could use the following bash script. You must provide the previously exported CloudFront Distribution URL.
 
 ```
 ./testing/test.sh https://xxxxxxxx.cloudfront.net/prod
 ```
 
 ## Clean Up
-To destroy the stack from your Primary and Fallback Region:
+
+1. Destroy the stack from your Primary and Fallback Region:
 ```
 ./deployment/destroy.sh AWS_REGION AWS_BACKUP_REGION DOMAIN_NAME HOSTED_ZONE_ID
 ```
-
+2. Confirm from the outputs, that the stack was successfully destroyed on both regions:
+```
+✅ CdkCloudFrontFailover: destroyed
+```
 Destroy example
 ```
 ./deployment/destroy.sh eu-west-1 us-east-1 example.com Z0XXXXXXXXXXXX
