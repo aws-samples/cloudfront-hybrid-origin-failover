@@ -10,13 +10,13 @@ Earlier this year, we released technical guidance regarding [Three advanced desi
 The objective of this code, is to allow you to quickly test the benefits of using a hybrid failover solution using Cloudfront Origin Failover and Route53.
 
 The solution will achieve the following:
-* Create an API Endpoint using AWS API Gateway and Lambda on both Primary and Backup Regions (with custom domain name + certificate)
+* Create an API Endpoint using [Amazon API Gateway](https://aws.amazon.com/api-gateway/) and [AWS Lambda](https://aws.amazon.com/lambda/) on both the Primary and Backup Regions (with custom domain name + certificate)
 * Create a Route53 healthcheck for both API Endpoints
-* Create a Route53 DNS entry, with an Alias for both Primary and Secondary API Endpoint
+* Create a Route53 DNS entry, with an Alias for both the Primary and Secondary API Endpoint
 * Create two (02) Cloudfront Distributions with the following setup:
   * Setup 1: Configured with Route53 failover dns record as Origin
   * Setup 2: Configured with Origin failover group. Route 53 failover dns record as primary and secondary API gateway as a fallback.
-* Export both Cloudfront distrbutions' domain names to allow you to test both solutions.
+* Export both Cloudfront distrbutions' domain names to let you to test both solutions.
 
 
 ## Architecture
@@ -27,22 +27,29 @@ The solution will achieve the following:
 * An AWS Account
 * Public domain hosted on Amazon Route53
 * Permissions to create origin records and health checks in Route 53 
-* Permissions to create or update IAM roles, ACM public certificates, CloudFront distributions, API Gateway configurations and Lambda functions in two different regions
+* Permissions to create or update [AWS Identity and Access Management (IAM)](https://aws.amazon.com/iam/) roles, [AWS Certificate Manager (ACM)](https://aws.amazon.com/certificate-manager/) public certificates, CloudFront distributions, API Gateway configurations, and Lambda functions in two different regions
 * Node.JS installed (as AWS CDK uses Node.js). Visit https://nodejs.org/ to install.
 * AWS CDK Toolkit installed `npm install -g aws-cdk`
 
 ## Deploy the solution
 
-Deploy this stack to your Primary and Fallback Region:
+The deployment of the solution will take approximately 10 minutes.
+1. We start by downloading the CDK template from our GitHub repository.
 ```
 git clone https://gitlab.aws.dev/chakibsa/cloudfront-hybrid-origin-failover.git
 cd cloudfront-hybrid-origin-failover
+```
+2. Install CDK and required dependencies.
+```
+npm install -g aws-cdk
 npm install
+```
+3. Deploy the stack to your Primary and Fallback Region.
+```
 ./deployment/deploy.sh AWS_REGION AWS_BACKUP_REGION DOMAIN_NAME HOSTED_ZONE_ID
 ```
 
-
-Required Arguments:
+You must input the following required arguments:
 * AWS_REGION: Allow you to specify your Primary Region
 * AWS_BACKUP_REGION: Allow you to specify your Fallback Region
 * DOMAIN_NAME: This stack will require you to have a public domain name hosted on Amazon Route53. Provide your domain name
