@@ -52,19 +52,20 @@ npm install
 You must input the following required arguments:
 * AWS_REGION: Allow you to specify your Primary Region
 * AWS_BACKUP_REGION: Allow you to specify your Fallback Region
-* DOMAIN_NAME: This stack will require you to have a public domain name hosted on Amazon Route53. Provide your domain name
-* HOSTED_ZONE_ID: This stack will require you to have a public domain name hosted on Amazon Route53. Provide your Hosted Zone ID
+* DOMAIN_NAME: This stack requires you to have a public domain name hosted on Amazon Route53. Provide your domain name
+* HOSTED_ZONE_ID: This stack requires you to have a public domain name hosted on Amazon Route53. Provide your Hosted Zone ID
 
 Deployment example
 ```
 ./deployment/deploy.sh eu-west-1 us-east-1 example.com Z0XXXXXXXXXXXX
 ```
 
-At the end of the deployment, you can find an export of the FQDN of 2 Cloudfront distributions:
-* Setup 1: Cloudfront Distribution with Route53 failover DNS record as origin
-* * Export Name = R53FailoverDistribDomain
-* Setup 2: Cloudfront Distribution with Combined Route53 Failover with Cloudfront Origin Failover 
-* * Export Name = HybridFailoverDistribDomain
+4. At the end of the deployment, the FQDN of the two created CloudFront distributions will be exported as an [AWS CloudFormation](https://aws.amazon.com/cloudformation/) output:
+* CloudFront Distribution with Route53 failover DNS record as origin
+** Export Name = R53-Failover-Distrib-Domain
+* CloudFront Distribution with Hybrid Route53 Failover with CloudFront Origin
+Failover
+** Export Name = Hybrid-Failover-Distrib-Domain
 
 ```
 Outputs:
