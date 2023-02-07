@@ -27,7 +27,7 @@ The solution will achieve the following:
 * An AWS Account
 * Public domain hosted on Amazon Route53
 * Permissions to create origin records and health checks in Route 53 
-* Permissions to create or update CloudFront distributions, API Gateway configurations and Lambda functions in two different regions
+* Permissions to create or update IAM roles, ACM public certificates, CloudFront distributions, API Gateway configurations and Lambda functions in two different regions
 * Node.JS installed (as AWS CDK uses Node.js). Visit https://nodejs.org/ to install.
 * AWS CDK Toolkit installed `npm install -g aws-cdk`
 
