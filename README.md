@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Earlier this year, we released technical guidance regarding [Three advanced design patterns for highly available applications using Amazon CloudFront](https://aws.amazon.com/fr/blogs/networking-and-content-delivery/three-advanced-design-patterns-for-high-available-applications-using-amazon-cloudfront/) including hybrid origin failover, graceful failure, and static stability. In this post, we will dive deeper into hybrid origin failover and how to combine both of them in a hybrid approach to further enhance the availability of your web applications. We will also provide a CDK solution that you can use to test both the Route 53 and combined hybrid origin failover approaches described. 
+Earlier this year, we released technical guidance regarding [Three advanced design patterns for highly available applications using Amazon CloudFront](https://aws.amazon.com/fr/blogs/networking-and-content-delivery/three-advanced-design-patterns-for-high-available-applications-using-amazon-cloudfront/) using Amazon CloudFront and Amazon Route 53. In this post, we will dive dive deeper into CloudFront origin failover, Amazon Route 53 DNS failover, and the hybrid origin failover approach to further enhance the availability of your web applications. We also provide an AWS Cloud Development Kit (AWS CDK) solution that you can use to implement and test different high-availability patterns.
 
 
 ## Solution's objectives
