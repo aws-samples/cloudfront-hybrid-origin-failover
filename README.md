@@ -62,10 +62,10 @@ Deployment example
 
 4. At the end of the deployment, the FQDN of the two created CloudFront distributions will be exported as an [AWS CloudFormation](https://aws.amazon.com/cloudformation/) output:
 * CloudFront Distribution with Route53 failover DNS record as origin
-** Export Name = R53-Failover-Distrib-Domain
+  * Export Name = R53-Failover-Distrib-Domain
 * CloudFront Distribution with Hybrid Route53 Failover with CloudFront Origin
 Failover
-** Export Name = Hybrid-Failover-Distrib-Domain
+  * Export Name = Hybrid-Failover-Distrib-Domain
 
 ```
 Outputs:
