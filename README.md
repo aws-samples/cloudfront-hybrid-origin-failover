@@ -21,7 +21,10 @@ The solution will achieve the following:
 
 ## Architecture
 
-![image](/source/images/architecture.png "Architecture")
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./source/images/arch-dark.png">
+  <img alt="This diagram illustrates how CloudFront origin failover and Route 53 failover work together." src="./source/images/arch-light.png">
+</picture>
 
 ## Solution Requirements
 * An AWS Account
